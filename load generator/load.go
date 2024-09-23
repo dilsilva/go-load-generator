@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"sync"
@@ -25,20 +26,26 @@ func sendRequest(url string, wg *sync.WaitGroup) {
 }
 
 func main() {
+	// Define command-line flags
+	url := flag.String("url", "http://google.com", "The URL to load test") // default: google.com
+	concurrency := flag.Int("c", 10, "Number of concurrent requests")      // default: 10
+	totalReq := flag.Int("r", 100, "Total number of requests")             // default: 100
+
+	// Parse the flags from the command line
+	flag.Parse()
+
+	// Initialize WaitGroup to synchronize goroutines
 	var wg sync.WaitGroup
 
-	// Configuration
-	url := "url"        // Target URL
-	concurrentReq := 10 // Amount of concurrent requests
-	totalReq := 100     // Total requests to send
-
-	// Fire off requests in batches using Goroutines
-	for i := 0; i < totalReq; i++ {
+	// Fire off the requests
+	for i := 0; i < *totalReq; i++ {
 		wg.Add(1) // Increment for each goroutine
-		go sendRequest(url, &wg)
+
+		// Start a goroutine to send the request
+		go sendRequest(*url, &wg)
 
 		// Maintain concurrency level
-		if (i+1)%concurrentReq == 0 {
+		if (i+1)%*concurrency == 0 {
 			wg.Wait() // Wait for current batch to finish
 		}
 	}
