@@ -1,0 +1,26 @@
+
+version: '3.3'
+
+services:
+  dummy-app:
+    image: marketplace.gcr.io/google/nginx1
+    container_name: dummy-app
+    ports:
+      - "8080:80"
+    networks:
+      - loadgen-network
+
+  loadgen:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: loadgen
+    depends_on:
+      - dummy-app
+    networks:
+      - loadgen-network
+    command: ["-url", "http://dummy-app", "-c", "10", "-r", "100"]
+
+networks:
+  loadgen-network:
+    driver: bridge
