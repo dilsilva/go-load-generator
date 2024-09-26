@@ -1,30 +1,32 @@
-# Use the official Golang image as the builder
+# Stage 1: Build using a trusted Go image
 FROM golang:1.23 AS builder
 
-# Set the Current Working Directory inside the container
+# Set environment variables for security and build efficiency
+ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+
+# Set the Current Working Directory
 WORKDIR /app
 
-# Copy go.mod and go.sum files first to leverage Docker caching
-COPY go.mod ./
-
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
-RUN go mod download
-
-# Copy the source code into the container
+# Copy the entire project into the container
 COPY . .
 
-# Build the Go app
-RUN go build -o loadgen ./cmd/loadgen/
+# Download the dependencies
+RUN go mod download
 
-# Start a new stage from scratch
-FROM alpine:latest
+# Build the Go binary with optimizations for smaller size and ensure binary is executable
+RUN go build -o loadgen -ldflags="-s -w" ./cmd/loadgen/ && chmod +x ./loadgen 
 
-# Set the Current Working Directory inside the container
+# Stage 2: Create a lightweight final image
+FROM gcr.io/distroless/base-debian10
+
+# Create a non-root user for the application
+USER nonroot:nonroot
+
+# Set the working directory
 WORKDIR /root/
 
-# Copy the Pre-built binary file from the previous stage
+# Copy the compiled binary from the builder stage
 COPY --from=builder /app/loadgen .
 
-# Command to run the executable
-# CMD ["./loadgen", "-url", "http://google.com", "-c", "10", "-r", "100"]
-CMD ["./loadgen"]
+# Command to run the load generator, allowing runtime arguments
+ENTRYPOINT ["./loadgen"]
