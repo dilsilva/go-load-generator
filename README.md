@@ -1,4 +1,4 @@
-# Go Load Generator
+# Go Load Generator for microservice-demo
 
 This project is a simple and efficient HTTP load generator written in Go. It allows you to test the performance of your web services by sending concurrent HTTP requests to a specified URL. The project also provides metrics like success/failure rates, average response time, and 95th percentile response time.
 

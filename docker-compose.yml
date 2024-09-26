@@ -2,9 +2,9 @@
 version: '3.3'
 
 services:
-  dummy-app:
+  microservice-demo:
     image: marketplace.gcr.io/google/nginx1
-    container_name: dummy-app
+    container_name: microservice-demo
     ports:
       - "8080:80"
     networks:
@@ -16,10 +16,10 @@ services:
       dockerfile: Dockerfile
     container_name: loadgen
     depends_on:
-      - dummy-app
+      - microservice-demo
     networks:
       - loadgen-network
-    command: ["-url", "http://dummy-app", "-c", "10", "-r", "100"]
+    command: ["-url", "http://microservice-demo", "-c", "10", "-r", "100"]
 
 networks:
   loadgen-network:
