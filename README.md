@@ -8,6 +8,7 @@ This project is a simple and efficient HTTP load generator written in Go. It all
 - **Metrics Collection**: Tracks and reports success/failure counts, average response times, and 95th percentile response time.
 - **Lightweight**: Built with Go, utilizing minimal resources with Docker.
 - **Containerized**: Easily containerized using a secure, multi-stage Dockerfile for safe deployment.
+- **CI**: Integrated CI workflow that executes simple tests and build for the application
 
 ## Table of Contents
 
@@ -15,6 +16,7 @@ This project is a simple and efficient HTTP load generator written in Go. It all
 - [Installation](#installation)
 - [Usage](#usage)
 - [Container Setup](#container-setup)
+- [Docker Compose Setup](#docker-compose-setup)
 - [Flags](#flags)
 - [Development](#development)
 - [License](#license)
@@ -57,23 +59,49 @@ After building, you can run the application on your local machine:
 ./loadgen -url http://example.com -c 10 -r 100
 ```
 
-## Docker Setup
+## Container Setup
 
 This project is containerized using Docker. You can build and run the container with the following commands.
 
 ### Build the Docker Image
 
 ```bash
-container build -t loadgen .
+docker build -t loadgen .
 ```
 
 ### Running the Docker Container
 
 ```bash
-container run --rm loadgen -url http://example.com -c 10 -r 100
+docker run --rm loadgen -url http://example.com -c 10 -r 100
 ```
 
-You can pass custom flags for concurrency, total requests, and the URL directly into the `container run` command.
+You can pass custom flags for concurrency, total requests, and the URL directly into the `docker run` command.
+
+## Docker Compose Setup
+
+If you'd like to test the load generator against a local service, you can use Docker Compose to spin up both the load generator and a dummy web server for testing.
+
+# Steps to Use Docker Compose
+
+1. Ensure Docker Compose is installed on your machine.
+2. Use the provided `docker-compose.yaml` file to start both the dummy app and the load generator:
+
+```bash
+docker-compose up --build
+```
+
+This will build the load generator container and spin up the dummy app server on port 8080, while also starting the load test against it.
+
+3. The load generator will send 100 requests with a concurrency level of 10 to the dummy app server.
+
+### Access the Dummy Application
+After running Docker Compose, you can access the dummy app at:
+
+```bash
+http://localhost:8080
+```
+
+This is the service that the load generator will target.
 
 ## Flags
 
