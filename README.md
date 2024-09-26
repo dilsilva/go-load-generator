@@ -7,14 +7,14 @@ This project is a simple and efficient HTTP load generator written in Go. It all
 - **Concurrency**: Simulate multiple users by sending requests concurrently.
 - **Metrics Collection**: Tracks and reports success/failure counts, average response times, and 95th percentile response time.
 - **Lightweight**: Built with Go, utilizing minimal resources with Docker.
-- **Dockerized**: Easily containerized using a secure, multi-stage Dockerfile for safe deployment.
+- **Containerized**: Easily containerized using a secure, multi-stage Dockerfile for safe deployment.
 
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Docker Setup](#docker-setup)
+- [Container Setup](#container-setup)
 - [Flags](#flags)
 - [Development](#development)
 - [License](#license)
@@ -64,16 +64,16 @@ This project is containerized using Docker. You can build and run the container 
 ### Build the Docker Image
 
 ```bash
-docker build -t loadgen .
+container build -t loadgen .
 ```
 
 ### Running the Docker Container
 
 ```bash
-docker run --rm loadgen -url http://example.com -c 10 -r 100
+container run --rm loadgen -url http://example.com -c 10 -r 100
 ```
 
-You can pass custom flags for concurrency, total requests, and the URL directly into the `docker run` command.
+You can pass custom flags for concurrency, total requests, and the URL directly into the `container run` command.
 
 ## Flags
 
