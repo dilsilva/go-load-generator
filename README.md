@@ -64,16 +64,16 @@ This project is containerized using Docker. You can build and run the container 
 ### Build the Docker Image
 
 ```bash
-container build -t loadgen .
+docker build -t loadgen .
 ```
 
 ### Running the Docker Container
 
 ```bash
-container run --rm loadgen -url http://example.com -c 10 -r 100
+docker run --rm loadgen -url http://example.com -c 10 -r 100
 ```
 
-You can pass custom flags for concurrency, total requests, and the URL directly into the `container run` command.
+You can pass custom flags for concurrency, total requests, and the URL directly into the `docker run` command.
 
 ## Flags
 
